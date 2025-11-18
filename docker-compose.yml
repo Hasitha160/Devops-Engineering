@@ -1,0 +1,51 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: password-manager-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=mydatabase
+    networks:
+      - password-manager-network
+
+  backend:
+    image: dev-backend
+    container_name: password-manager-backend
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - MONGO_URI=mongodb://host.docker.internal:27017/mydatabase
+      - JWT_SECRET=securepass-jwt-secret-key-2024
+      - ENCRYPTION_KEY=securepass32charencryptionkey!
+      - SESSION_SECRET=securepass-session-secret
+      - CLIENT_URL=http://localhost:8080
+      - PORT=5001
+      - NODE_ENV=production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - password-manager-network
+
+  frontend:
+    image: dev-frontend
+    container_name: password-manager-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - password-manager-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  password-manager-network:
+    driver: bridge
