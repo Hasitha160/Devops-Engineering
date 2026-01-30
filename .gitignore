@@ -1,0 +1,12 @@
+# Terraform files
+terraform-cd/
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Node modules
+node_modules/
+
+# IDE
+.vscode/
