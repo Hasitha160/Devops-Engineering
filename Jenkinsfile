@@ -45,11 +45,16 @@ pipeline {
 
         stage('Get EC2 Public IP') {
             steps {
-                script {
-                    env.PUBLIC_IP = sh(
-                        script: "aws ec2 describe-instances --filters 'Name=tag:Name,Values=devops-app-server' 'Name=instance-state-name,Values=running' --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region ap-south-1",
-                        returnStdout: true
-                    ).trim()
+                withCredentials([
+                    string(credentialsId: 'aws-access-key', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    script {
+                        env.PUBLIC_IP = sh(
+                            script: "aws ec2 describe-instances --filters 'Name=tag:Name,Values=devops-app-server' 'Name=instance-state-name,Values=running' --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region ap-south-1",
+                            returnStdout: true
+                        ).trim()
+                    }
                 }
             }
         }
