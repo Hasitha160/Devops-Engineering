@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     env.PUBLIC_IP = sh(
-                        script: "cd ${TF_DIR} && terraform output -raw public_ip",
+                        script: "aws ec2 describe-instances --filters 'Name=tag:Name,Values=devops-app-server' 'Name=instance-state-name,Values=running' --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region ap-south-1",
                         returnStdout: true
                     ).trim()
                 }
