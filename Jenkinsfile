@@ -62,7 +62,7 @@ pipeline {
                     docker pull mongo:7.0
 
                     # Remove old containers
-                    docker rm -f backend || true
+                    docker rm -f password-manager-backend || true
                     docker rm -f frontend || true
                     docker rm -f mongodb || true
 
@@ -81,7 +81,7 @@ pipeline {
                     sleep 5
 
                     # Start Backend (connected to MongoDB)
-                    docker run -d --name backend \
+                    docker run -d --name password-manager-backend \
                       --network app-network \
                       -p 5001:5001 \
                       -e MONGO_URI="mongodb://mongodb:27017/mydatabase" \
