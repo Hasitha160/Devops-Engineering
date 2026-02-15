@@ -43,13 +43,12 @@ pipeline {
             }
         }
 
-        stage('Get EC2 Public IP') {
+        stage('Set EC2 Public IP') {
             steps {
                 script {
-                    env.PUBLIC_IP = sh(
-                        script: "aws ec2 describe-instances --filters 'Name=tag:Name,Values=devops-app-server' 'Name=instance-state-name,Values=running' --query 'Reservations[0].Instances[0].PublicIpAddress' --output text --region ap-south-1",
-                        returnStdout: true
-                    ).trim()
+                    // Hardcoded IP - update this if EC2 IP changes
+                    env.PUBLIC_IP = '65.1.86.11'
+                    echo "Deploying to EC2: ${env.PUBLIC_IP}"
                 }
             }
         }
