@@ -63,14 +63,14 @@ pipeline {
 
                     # Remove old containers
                     docker rm -f password-manager-backend || true
-                    docker rm -f frontend || true
-                    docker rm -f mongodb || true
+                    docker rm -f password-manager-frontend || true
+                    docker rm -f password-manager-mongodb || true
 
                     # Create docker network if it doesn't exist
                     docker network create app-network || true
 
                     # Start MongoDB
-                    docker run -d --name mongodb \
+                    docker run -d --name password-manager-mongodb \
                       --network app-network \
                       -p 27017:27017 \
                       -v mongo-data:/data/db \
@@ -84,13 +84,13 @@ pipeline {
                     docker run -d --name password-manager-backend \
                       --network app-network \
                       -p 5001:5001 \
-                      -e MONGO_URI="mongodb://mongodb:27017/mydatabase" \
+                      -e MONGO_URI="mongodb://password-manager-mongodb:27017/mydatabase" \
                       -e PORT=5001 \
                       --restart always \
                       $IMAGE_BACKEND
 
                     # Start Frontend
-                    docker run -d --name frontend \
+                    docker run -d --name password-manager-frontend \
                       --network app-network \
                       -p 80:80 \
                       --restart always \
