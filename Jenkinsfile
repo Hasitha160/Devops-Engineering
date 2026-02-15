@@ -61,10 +61,10 @@ pipeline {
                     docker pull $IMAGE_FRONTEND
                     docker pull mongo:7.0
 
-                    # Remove old containers
-                    docker rm -f password-manager-backend || true
-                    docker rm -f password-manager-frontend || true
-                    docker rm -f password-manager-mongodb || true
+                    # Remove old containers (both old and new naming)
+                    docker rm -f password-manager-backend backend || true
+                    docker rm -f password-manager-frontend frontend || true
+                    docker rm -f password-manager-mongodb mongodb || true
 
                     # Create docker network if it doesn't exist
                     docker network create app-network || true
